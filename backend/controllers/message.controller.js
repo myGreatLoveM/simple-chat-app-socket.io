@@ -33,7 +33,7 @@ export const sendMessage = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      message: newMessage,
+      data: newMessage,
     })
   } catch (error) {
     console.log(error)
@@ -57,15 +57,15 @@ export const getMessages = async (req, res) => {
     if(!conversation) {
       return res.status(200).json({
         success: true,
-        messages: [],
+        data: [],
       })
     }
 
     const messages = conversation.messages
-
+    
     return res.status(200).json({
       success: true,
-      messages: messages,
+      data: messages,
     })
   } catch (error) {
     console.log(error)

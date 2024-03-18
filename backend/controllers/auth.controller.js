@@ -9,21 +9,21 @@ export const signup = async (req, res) => {
     if (!fullName || !username || !password || !confirmPassword || !gender) {
       return res.status(400).json({
         success: false,
-        mesaage: 'Please provide all required information',
+        message: 'Please provide all required information',
       })
     }
 
     if (password.length < 6) {
       return res.status(400).json({
         success: false,
-        mesaage: 'Password must be at least 6 characters',
+        message: 'Password must be at least 6 characters',
       })
     }
 
     if (password !== confirmPassword) {
       return res.status(400).json({
         success: false,
-        mesaage: 'Passwords do not match',
+        message: 'Passwords do not match',
       })
     }
 
@@ -32,7 +32,7 @@ export const signup = async (req, res) => {
     if (user) {
       return res.status(400).json({
         success: false,
-        mesaage: 'Username already exist',
+        message: 'Username already exist',
       })
     }
 
@@ -54,31 +54,31 @@ export const signup = async (req, res) => {
     if (newUser) {
       await newUser.save()
 
-      console.log(newUser._id)
       generateTokenAndSetCookie(newUser._id, res)
       const currentUser = {
         _id: newUser._id,
         fullName: newUser.fullName,
         username: newUser.username,
         gender: newUser.gender,
+        profilePic: newUser.profilePic,
       }
 
       return res.status(201).json({
         success: true,
-        mesaage: 'User created successfully',
+        message: 'User created successfully',
         data: currentUser,
       })
     } else {
       return res.status(400).json({
         success: false,
-        mesaage: 'Something went wrong',
+        message: 'Something went wrong',
       })
     }
   } catch (error) {
     console.log(error)
     return res.status(500).json({
       success: false,
-      mesaage: 'Internal Server Error',
+      message: 'Internal Server Error',
     })
   }
 }
@@ -90,7 +90,7 @@ export const login = async (req, res) => {
     if (!username || !password) {
       return res.status(400).json({
         success: false,
-        mesaage: 'Please provide all required information',
+        message: 'Please provide all required information',
       })
     }
 
@@ -99,7 +99,7 @@ export const login = async (req, res) => {
     if (!userExist) {
       return res.status(404).json({
         success: false,
-        mesaage: 'Invalid credentials',
+        message: 'Invalid credentials',
       })
     } else {
       const passwordVerify = await bcrypt.compare(password, userExist.password)
@@ -107,7 +107,7 @@ export const login = async (req, res) => {
       if (!passwordVerify) {
         return res.status(404).json({
           success: false,
-          mesaage: 'Invalid credentials',
+          message: 'Invalid credentials',
         })
       } else {
         generateTokenAndSetCookie(userExist._id, res)
@@ -117,6 +117,7 @@ export const login = async (req, res) => {
           fullName: userExist.fullName,
           username: userExist.username,
           gender: userExist.gender,
+          profilePic: userExist.profilePic,
         }
         return res.status(200).json({
           success: true,
@@ -129,7 +130,7 @@ export const login = async (req, res) => {
     console.log(error.message)
     return res.status(500).json({
       success: false,
-      mesaage: 'Internal Server Error',
+      message: 'Internal Server Error',
     })
   }
 }
@@ -139,13 +140,13 @@ export const logout = async (req, res) => {
     res.cookie('token', '', {maxAge: 0})
     return res.status(200).json({
       success: true,
-      mesaage: 'Logged Out successfully',
+      message: 'Logged Out successfully',
     })
   } catch (error) {
     console.log(error)
     return res.status(500).json({
       success: false,
-      mesaage: 'Internal Server Error',
+      message: 'Internal Server Error',
     })
   }
 }

@@ -4,7 +4,7 @@ import User from '../models/user.model.js'
 const protectRoute = async (req, res, next) => {
   try {
     const token = req.cookies.token
-    console.log(token)
+
     if (!token) {
       return res.status(401).json({
         success: true,
@@ -20,10 +20,9 @@ const protectRoute = async (req, res, next) => {
         message: 'Unauthorized - Invalid Token',
       })
     }
-    console.log(decoded)
-    console.log(decoded.iat)
+
     const user = await User.findOne({_id: decoded.userId})
-    console.log(user)
+
     if (!user) {
       return res.status(404).json({
         success: false,

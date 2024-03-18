@@ -91,7 +91,7 @@ function Signup() {
             selectedGender={input.gender}
           />
           <Link
-            to='login'
+            to='/login'
             className='text-sm hover:underline hover:text-blue-600 mt-2 inline-block'
           >
             Already have an account?
